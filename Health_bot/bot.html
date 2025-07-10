@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Chat Assistant</title>
+  <link rel="stylesheet" href="bot.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div class="logo-container">
+          <div class="logo-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+            </svg>
+          </div>
+        </div>
+        <h1>Healthcare Chat Assistant</h1>
+      </div>
+    </header>
+    
+    <div class="disclaimer">
+      <div class="disclaimer-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <div class="disclaimer-content">
+        <h3>Important Health Disclaimer</h3>
+        <p>This AI assistant provides general health information only and is not a substitute for professional medical advice, 
+          diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any 
+          questions you may have regarding a medical condition.</p>
+      </div>
+    </div>
+    
+    <div class="chat-container">
+      <div id="chat-messages" class="messages">
+        <div class="message system">
+          <div class="message-content">
+            Hello! I'm your healthcare assistant. I can provide general health information. How can I help you today?
+          </div>
+        </div>
+      </div>
+      
+      <div class="input-container">
+        <textarea id="user-input" placeholder="Ask a health question..." rows="1"></textarea>
+        <button id="send-button" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 2-7 20-4-9-9-4Z"></path>
+            <path d="M22 2 11 13"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="instructions">
+      <p>This application requires Ollama running locally with the healthcare model installed.</p>
+      <p>To install: <code>ollama pull skos41/llama-healthcare-llm</code></p>
+    </div>
+  </div>
+  
+  <script src="bot.js"></script>
+</body>
+</html>

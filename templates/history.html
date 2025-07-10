@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Prediction History</title>
+         <link rel="stylesheet" href="{{ url_for('static', filename='css/style_dia.css') }}">
+     </head>
+     <body>
+         <header>
+             <h1>Prediction History</h1>
+             <nav>
+                 <a href="{{ url_for('home') }}">Home</a> |
+                 <a href="{{ url_for('history') }}">View History</a>
+             </nav>
+         </header>
+         <div class="history-table">
+             {% if users %}
+                 <table>
+                     <thead>
+                         <tr>
+                             <th>ID</th>
+                             <th>Age</th>
+                             <th>Gender</th>
+                             <th>Glucose (mg/dL)</th>
+                             <th>Height (m)</th>
+                             <th>BMI</th>
+                             <th>Prediction</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for user in users %}
+                             <tr>
+                                 <td>{{ user.id }}</td>
+                                 <td>{{ user.age }}</td>
+                                 <td>{{ user.gender }}</td>
+                                 <td>{{ user.glucose }}</td>
+                                 <td>{{ user.height }}</td>
+                                 <td>{{ user.bmi | round(2) }}</td>
+                                 <td>{{ user.prediction }}</td>
+                             </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+             {% else %}
+                 <p>No predictions found.</p>
+             {% endif %}
+         </div>
+     </body>
+     </html>

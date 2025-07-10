@@ -1,0 +1,375 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+button.video{
+    background-color: rgb(207, 12, 12);
+    color: white;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.log {
+    background-image: url("../images/hclogo.png");
+    background-size: cover;
+    height: 5.5rem;
+    width: 5rem;
+    padding-bottom: 19px;
+}
+
+.appointment {
+    background-color: rgb(207, 12, 12);
+    color: white;
+    border-radius: 2rem;
+    border: none;
+    height: 3rem;
+    width: 10rem;
+}
+
+.login {
+    background-color: rgb(207, 12, 12);
+    color: white;
+    border-radius: 2rem;
+    border: none;
+    height: 3rem;
+    width: 7rem;
+}
+
+button p {
+    padding-top: 0.2rem;
+    font-size: 1.4rem;
+    color: white;
+}
+
+.offcanvas.transparent {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    backdrop-filter: blur(0.5px);
+}
+
+.offcanvas.transparent .nav-link {
+    color: white;
+}
+
+.offcanvas.transparent .nav-link:hover {
+    color: #ccc;
+}
+
+.slider-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    margin-top: 6rem;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30rem;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 0;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 1;
+    color: white;
+}
+
+.overlay {
+    color: white;
+    font-style: oblique;
+    justify-content: center;
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    padding-top: 150px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+button.button {
+    background-color: rgb(207, 12, 12);
+    color: white;
+    border-radius: 2rem;
+    border: none;
+    height: 3rem;
+    width: 10rem;
+}
+
+.dots {
+    position: absolute;
+    top: 28rem;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+}
+
+.dot {
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    margin: 0 5px;
+    background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dot.active {
+    background-color: rgb(207, 12, 12);
+}
+
+.container {
+    display: flex;
+    padding: 40px;
+    max-width: 1200px;
+    margin: auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.text-section {
+    flex: 2;
+    padding-right: 30px;
+}
+
+.image-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-section img {
+    max-width: 100%;
+    border-radius: 8px;
+    height: 24rem;
+}
+
+.welcome {
+    color: #c0392b;
+    font-weight: 500;
+    margin-bottom: 0;
+    font-size: 1.5rem;
+}
+
+.container h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+.description {
+    line-height: 1.6;
+    margin: 15px 0;
+    color: #555;
+}
+
+.author {
+    margin-top: 30px;
+    font-size: 1.1em;
+    font-style: italic;
+}
+
+.author span {
+    color: #e74c3c;
+    font-size: 0.9em;
+    font-style: oblique;
+}
+
+.testimonial-section {
+    padding: 50px 20px;
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+}
+
+.testimonial-section h2 span {
+    color: #c0392b;
+    font-weight: 500;
+}
+
+.testimonial-section h2 strong {
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+}
+
+.slides2 {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 400%;
+}
+
+.testimonial-card {
+    width: 100%;
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    gap: 30px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.profile {
+    flex: 0 0 120px;
+    text-align: center;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile h4 {
+    margin: 10px 0 5px;
+    font-size: 1.1rem;
+}
+
+.profile .role {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.testimonial-text {
+    flex: 1;
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.indicators {
+    margin-top: 20px;
+}
+
+.dot2 {
+    height: 12px;
+    width: 12px;
+    margin: 0 6px;
+    background-color: #ccc;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.dot2.active {
+    background-color: #e74c3c;
+}
+
+.footer {
+    background-color: #1c1c1c;
+    color: white;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.footer-column {
+    flex: 1 1 200px;
+    min-width: 220px;
+}
+
+.footer-column h3, .footer-column h4 {
+    color: #f44336;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 8px;
+}
+
+.footer-column p, .footer-column li {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.footer-column i {
+    margin-right: 8px;
+    color: #f44336;
+}
+
+/* Flash Message Styles */
+.flash-messages {
+    margin: 20px auto;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.flash {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.flash.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.flash.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.flash.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}

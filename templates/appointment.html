@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Care - Book an Appointment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/appointment.css') }}">
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="notification" id="notification"></div>
+
+    <header>
+        <div class="navbar">
+            <div class="nav-log">
+                <div class="log"></div>
+            </div>
+
+            <div class="home">
+                <i class="fa-solid fa-house"></i>
+                <a href="{{ url_for('home') }}">HOME</a>
+            </div>
+
+            <div class="services">
+                <i class="fa-solid fa-circle-check"></i>
+                <a href="{{ url_for('services') }}">SERVICES</a>
+            </div>
+
+            <div class="doctors">
+                <i class="fa-solid fa-user-doctor"></i>
+                <a href="{{ url_for('doctors') }}">DOCTORS</a>
+            </div>
+
+            <div class="faqs">
+                <i class="fa-solid fa-circle-question"></i>
+                <a href="{{ url_for('faqs') }}">FAQs</a>
+            </div>
+
+            <div class="contact">
+                <i class="fa-solid fa-address-card"></i>
+                <a href="{{ url_for('contact') }}">CONTACT</a>
+            </div>
+
+            <button class="appointment">
+                <a href="{{ url_for('appointment') }}"><p>Appointment</p></a>
+            </button>
+
+            <button class="login">
+                <a href="{{ url_for('logout') }}"><p>Logout</p></a>
+            </button>
+
+                <button class="video"><a href="http://localhost:3000/doctor.html"><p>Emergency vc🎦</p></a></button>
+
+            <button class="btn btn-dark m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+            </button>
+
+            <!-- Offcanvas Sidebar -->
+            <div class="offcanvas offcanvas-end transparent" tabindex="-1" id="sidebarMenu">
+                <div class="offcanvas-header">
+                    <h4 class="offcanvas-title"><i class="fa-solid fa-hand-holding-heart"></i> Heart Care</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('home') }}"><i class="bi bi-house-door me-2"></i>HOME</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('services') }}"><i class="bi bi-record-circle me-2"></i>SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('doctors') }}"><i class="fa-solid fa-user-doctor"></i> DOCTORS</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('faqs') }}"><i class="fa-solid fa-circle-question"></i> FAQs</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('contact') }}"><i class="fa-solid fa-address-card"></i> CONTACT</a></li>
+                        <li class="nav-item"><button class="appointment"><a href="{{ url_for('appointment') }}"><p>Appointment</p></a></button></li>
+                        <hr class="text-secondary">
+                        <li class="nav-item"><button class="login"><a href="{{ url_for('logout') }}"><p>Logout</p></a></button></li>
+                        <li class="nav-item"><button class="video"><a href="http://localhost:3000/doctor.html"><p>Emergency vc🎦</p></a></button>
+</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">Book Your Appointment, {{ user.name }}!</h1>
+        
+        <section class="appointment-section">
+            <div class="appointment-form">
+                <h2 class="form-title">Schedule an Appointment</h2>
+                <form id="appointment-form">
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input type="text" id="fullname" name="fullname" class="form-input" required>
+                        <div class="error-message" id="fullname-error">Please enter your full name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                        <div class="error-message" id="email-error">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" required>
+                        <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor" class="form-label">Select Doctor</label>
+                        <select id="doctor" name="doctor" class="form-select" required>
+                            <option value="">-- Select a Doctor --</option>
+                            <option value="Dr. Devi Prasad Shetty - Cardiac Surgeon">Dr. Devi Prasad Shetty - Cardiac Surgeon</option>
+                            <option value="Dr. Naresh Trehan - Cardiothoracic Surgeon">Dr. Naresh Trehan - Cardiothoracic Surgeon</option>
+                            <option value="Dr. Ramakanta Panda - Heart Specialist">Dr. Ramakanta Panda - Heart Specialist</option>
+                            <option value="Dr. Mahmudul Hassan - Pediatric Cardiologist">Dr. Mahmudul Hassan - Pediatric Cardiologist</option>
+                            <option value="Dr. Sabbir Ahmed - Interventional Cardiologist">Dr. Sabbir Ahmed - Interventional Cardiologist</option>
+                            <option value="Dr. Ramesh Babu - Electrophysiologist">Dr. Ramesh Babu - Electrophysiologist</option>
+                            <option value="Dr. Purshotam Lal - Senior Cardiologist">Dr. Purshotam Lal - Senior Cardiologist</option>
+                            <option value="Dr. K.K. Talwar - Heart Failure Specialist">Dr. K.K. Talwar - Heart Failure Specialist</option>
+                        </select>
+                        <div class="error-message" id="doctor-error">Please select a doctor</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date" class="form-label">Preferred Date</label>
+                        <input type="date" id="date" name="date" class="form-input" required>
+                        <div class="error-message" id="date-error">Please select a valid future date</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time" class="form-label">Preferred Time</label>
+                        <select id="time" name="time" class="form-select" required>
+                            <option value="">-- Select Time --</option>
+                            <option value="09:00">09:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="14:00">02:00 PM</option>
+                            <option value="15:00">03:00 PM</option>
+                            <option value="16:00">04:00 PM</option>
+                        </select>
+                        <div class="error-message" id="time-error">Please select a time slot</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reason" class="form-label">Reason for Visit</label>
+                        <textarea id="reason" name="reason" class="form-textarea" rows="3" required></textarea>
+                        <div class="error-message" id="reason-error">Please provide a reason for your visit</div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Book Appointment</button>
+                </form>
+            </div>
+            
+            <div class="appointments-list">
+                <h2 class="form-title">Your Upcoming Appointments</h2>
+                <div id="appointments-container">
+                    <p>You don't have any upcoming appointments.</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="emergency-card">
+            <h2 class="emergency-title">Heart Emergency?</h2>
+            <p>If you're experiencing chest pain, shortness of breath, or any heart emergency symptoms:</p>
+            <div class="emergency-phone">Call: 911</div>
+            <p>Our emergency cardiology team is available 24/7 for immediate care.</p>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/appointment.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSF7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    header {
+      background-color: rgb(207, 12, 12);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f1f1f1;
+    }
+
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      background-color: #070a08;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #3b3b3b;
+    }
+
+    form input[type="text"],
+    form select,
+    form input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    form select:focus,
+    form input[type="text"]:focus,
+    form input[type="file"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    form label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .logout {
+      background-color: #333;
+      padding: 8px 16px;
+      border-radius: 5px;
+    }
+
+    .logout a {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <header>
+    <span>Doctor Dashboard - Welcome, {{ user.name }}</span>
+    <div class="logout">
+      <a href="{{ url_for('logout') }}"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </header>
+  <div class="container">
+    <div class="card">
+      <h3>Today's Appointments</h3>
+      <table>
+        <tr>
+          <th>Time</th>
+          <th>Patient</th>
+          <th>Reason</th>
+          <th>Patient Reports</th>
+        </tr>
+        {% if appointments %}
+          {% for appt in appointments %}
+            <tr>
+              <td>{{ appt.time }}</td>
+              <td>{{ appt.fullname }}</td>
+              <td>{{ appt.reason }}</td>
+              <td>
+                {% set appt_prescriptions = prescriptions|selectattr('appointment_id', 'equalto', appt.id)|list %}
+                {% if appt_prescriptions %}
+                  {% for prescription in appt_prescriptions %}
+                    <a href="{{ url_for('uploaded_file', filename=prescription.file_path|basename) }}">{{ prescription.patient_name }} - {{ prescription.report_type }}.{{ prescription.file_path|splitext|last }}</a><br>
+                  {% endfor %}
+                {% else %}
+                  No reports uploaded
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4">No appointments scheduled today.</td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Upload Report</h3>
+      <form action="{{ url_for('upload_report') }}" method="POST" enctype="multipart/form-data">
+        <label for="patientName">Patient Name:</label>
+        <input type="text" name="patientName" placeholder="Enter patient name" required>
+
+        <label for="appointmentId">Link to Appointment:</label>
+        <select name="appointmentId">
+          <option value="">Select Appointment (Optional)</option>
+          {% for appt in appointments %}
+            <option value="{{ appt.id }}">{{ appt.fullname }} - {{ appt.time }} - {{ appt.reason }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="reportType">Report Type:</label>
+        <select name="reportType" required>
+          <option value="">Select Report Type</option>
+          <option value="Prescription">Prescription</option>
+          <option value="Lab Report">Lab Report</option>
+        </select>
+
+        <label for="reportFile">Select File (PNG or PDF):</label>
+        <input type="file" name="reportFile" accept=".png,.pdf" required>
+
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

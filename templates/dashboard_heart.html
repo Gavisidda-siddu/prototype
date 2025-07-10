@@ -1,0 +1,79 @@
+{% extends "base_heart.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Heart Rate Dashboard</h2>
+    
+    <div class="chart-container">
+        <canvas id="heartRateChart"></canvas>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Average Heart Rate</h3>
+            <p id="avgHeartRate">--</p>
+        </div>
+        <div class="stat-card">
+            <h3>Maximum Heart Rate</h3>
+            <p id="maxHeartRate">--</p>
+        </div>
+        <div class="stat-card">
+            <h3>Minimum Heart Rate</h3>
+            <p id="minHeartRate">--</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dates = JSON.parse('{{ dates | safe }}');
+    const rates = JSON.parse('{{ rates | safe }}');
+    
+    // Calculate stats
+    if (rates.length > 0) {
+        const avg = Math.round(rates.reduce((a, b) => a + b, 0) / rates.length);
+        const max = Math.max(...rates);
+        const min = Math.min(...rates);
+        
+        document.getElementById('avgHeartRate').textContent = `${avg} BPM`;
+        document.getElementById('maxHeartRate').textContent = `${max} BPM`;
+        document.getElementById('minHeartRate').textContent = `${min} BPM`;
+    }
+    
+    // Create chart
+    const ctx = document.getElementById('heartRateChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Heart Rate (BPM)',
+                data: rates,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Heart Rate (BPM)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date/Time'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

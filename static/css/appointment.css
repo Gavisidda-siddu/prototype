@@ -1,0 +1,287 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+button.video{
+    background-color: rgb(207, 12, 12);
+    color: white;
+}
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.log {
+    background-image: url("../images/hclogo.png");
+    background-size: cover;
+    height: 5.5rem;
+    width: 5rem;
+    padding-bottom: 19px;
+}
+
+.appointment {
+    background-color: rgb(207, 12, 12);
+    color: white;
+    border-radius: 2rem;
+    border: none;
+    height: 3rem;
+    width: 10rem;
+}
+
+.login {
+    background-color: rgb(207, 12, 12);
+    color: white;
+    border-radius: 2rem;
+    border: none;
+    height: 3rem;
+    width: 7rem;
+}
+
+button p {
+    padding-top: 0.2rem;
+    font-size: 1.4rem;
+    color: white;
+}
+
+.offcanvas.transparent {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    backdrop-filter: blur(0.5px);
+}
+
+.offcanvas.transparent .nav-link {
+    color: white;
+}
+
+.offcanvas.transparent .nav-link:hover {
+    color: #ccc;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    text-align: center;
+    margin: 40px 0;
+    color: #333;
+}
+
+.appointment-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.appointment-form {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
+
+.form-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #e74c3c;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+.submit-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #c0392b;
+}
+
+.appointments-list {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
+
+.appointment-card {
+    padding: 15px;
+    border-left: 3px solid #e74c3c;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    border-radius: 0 4px 4px 0;
+}
+
+.appointment-card h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.appointment-info {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.appointment-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.appointment-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.reschedule-btn {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.cancel-btn {
+    background-color: #e67e22;
+    color: #fff;
+}
+
+.emergency-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border-left: 5px solid #e74c3c;
+    margin-bottom: 50px;
+}
+
+.emergency-title {
+    font-size: 20px;
+    color: #e74c3c;
+    margin-bottom: 15px;
+}
+
+.emergency-phone {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background-color: #2ecc71;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transform: translateX(200%);
+    transition: transform 0.3s ease-out;
+    z-index: 1000;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+/* Flash Message Styles */
+.flash-messages {
+    margin: 20px auto;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.flash {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.flash.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.flash.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.flash.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}

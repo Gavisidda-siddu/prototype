@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Heart Care Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSF7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/service.css') }}" />
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <header>
+        <div class="navbar">
+            <div class="nav-log">
+                <div class="log"></div>
+            </div>
+
+            <div class="home">
+                <i class="fa-solid fa-house"></i>
+                <a href="{{ url_for('home') }}">HOME</a>
+            </div>
+
+            <div class="services">
+                <i class="fa-solid fa-circle-check"></i>
+                <a href="{{ url_for('services') }}">SERVICES</a>
+            </div>
+
+            <div class="doctors">
+                <i class="fa-solid fa-user-doctor"></i>
+                <a href="{{ url_for('doctors') }}">DOCTORS</a>
+            </div>
+
+            <div class="faqs">
+                <i class="fa-solid fa-circle-question"></i>
+                <a href="{{ url_for('faqs') }}">FAQs</a>
+            </div>
+
+            <div class="contact">
+                <i class="fa-solid fa-address-card"></i>
+                <a href="{{ url_for('contact') }}">CONTACT</a>
+            </div>
+
+            <button class="appointment">
+                <a href="{{ url_for('appointment') }}"><p>Appointment</p></a>
+            </button>
+
+            <button class="login">
+                <a href="{{ url_for('logout') }}"><p>Logout</p></a>
+            </button>
+
+            <button class="video"><a href="http://localhost:3000/doctor.html"><p>Emergency vc🎦</p></a></button>
+
+
+            <button class="btn btn-dark m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+            </button>
+
+            <!-- Offcanvas Sidebar -->
+            <div class="offcanvas offcanvas-end transparent" tabindex="-1" id="sidebarMenu">
+                <div class="offcanvas-header">
+                    <h4 class="offcanvas-title"><i class="fa-solid fa-hand-holding-heart"></i> Heart Care</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('home') }}"><i class="bi bi-house-door me-2"></i>HOME</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('services') }}"><i class="bi bi-record-circle me-2"></i>SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('doctors') }}"><i class="fa-solid fa-user-doctor"></i> DOCTORS</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('faqs') }}"><i class="fa-solid fa-circle-question"></i> FAQs</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('contact') }}"><i class="fa-solid fa-address-card"></i> CONTACT</a></li>
+                        <li class="nav-item"><button class="appointment"><a href="{{ url_for('appointment') }}"><p>Appointment</p></a></button></li>
+                        <hr class="text-secondary">
+                        <li class="nav-item"><button class="login"><a href="{{ url_for('logout') }}"><p>Logout</p></a></button></li>
+                        <li class="nav-item"><button class="video"><a href="http://localhost:3000/doctor.html"><p>Emergency vc🎦</p></a></button>
+</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="header">
+            <h1>Heart Care Hospital Services, {{ user.name }}!</h1>
+        </div>
+
+        <div class="card-container" id="card-container">
+            <!-- Service cards injected by JavaScript -->
+        </div>
+
+        <section class="image-section my-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2>Diabetes Prediction Service</h2>
+                        <img src="{{ url_for('static', filename='images/diabe.jpg') }}" alt="Diabetes Prediction" class="img-fluid rounded shadow" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const services = [
+            {
+                title: "Diabetes Prediction",
+                image: "{{ url_for('static', filename='images/diabe.jpg') }}",
+                items: [
+                    "Predict your diabetes risk with our advanced machine learning model.",
+                    "Enter your age, gender, glucose level, weight, and height below to get a personalized prediction, including BMI, diet, and exercise recommendations."
+                ],
+                form: `
+                    <form id="diabetes-form" class="mt-3">
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age (1–120)</label>
+                            <input type="number" class="form-control" id="age" name="age" required min="1" max="120">
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="glucose" class="form-label">Glucose Level (mg/dL, 0–500)</label>
+                            <input type="number" class="form-control" id="glucose" name="glucose" required min="0" max="500" step="0.1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="weight" class="form-label">Weight (kg, 20–300)</label>
+                            <input type="number" class="form-control" id="weight" name="weight" required min="20" max="300" step="0.1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="height" class="form-label">Height (meters, 0.5–3.0)</label>
+                            <input type="number" class="form-control" id="height" name="height" required min="0.5" max="3.0" step="0.01">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Get Prediction</button>
+                    </form>
+                    <div id="prediction-result" class="mt-3"></div>
+                `
+            },
+            
+            {
+                title: "Diagnostic Services",
+                image: "{{ url_for('static', filename='images/diagnosticservice.jpg') }}",
+                items: [
+                    "Electrocardiogram (ECG or EKG) – Measures electrical activity of the heart.",
+                    "Echocardiogram – Uses ultrasound to visualize heart function and structure.",
+                    "Stress Testing (TMT) – Evaluates heart function during physical exertion.",
+                    "Holter Monitoring – 24–48 hour continuous ECG monitoring.",
+                    "Cardiac MRI and CT Scan – Advanced imaging for detailed heart structure.",
+                    "Coronary Angiography – Checks for blockages in the coronary arteries.",
+                    "Blood Tests – For cardiac markers like troponin, cholesterol, etc."
+                ]
+            },
+            {
+                title: "Interventional Cardiology",
+                image: "{{ url_for('static', filename='images/intervential cardiology.jpg') }}",
+                items: [
+                    "Angioplasty (with or without stent placement)",
+                    "Coronary Artery Bypass Grafting (CABG)",
+                    "Pacemaker and ICD insertion",
+                    "Valve Repair or Replacement (TAVR, Mitral Clip)",
+                    "Electrophysiology Studies and Ablation for arrhythmias"
+                ]
+            },
+            {
+                title: "Cardiac Surgery",
+                image: "{{ url_for('static', filename='images/cardiac surgery.jpg') }}",
+                items: [
+                    "Open-heart surgery",
+                    "Valve replacement surgeries",
+                    "Congenital heart defect correction",
+                    "Heart transplant (in some advanced centers)"
+                ]
+            },
+            {
+                title: "Outpatient & Preventive Cardiology",
+                image: "{{ url_for('static', filename='images/outpatient.jpg') }}",
+                items: [
+                    "Heart check-up packages",
+                    "Lipid profile monitoring and hypertension control",
+                    "Lifestyle counseling (diet, exercise, smoking cessation)",
+                    "Cardiac rehabilitation programs"
+                ]
+            },
+            {
+                title: "Emergency Cardiac Care",
+                image: "{{ url_for('static', filename='images/emergency.webp') }}",
+                items: [
+                    "24/7 Cardiac Emergency Unit",
+                    "Management of acute heart attack (STEMI/NSTEMI)",
+                    "Advanced life support systems and defibrillation"
+                ]
+            },
+            {
+                title: "Pediatric Cardiology",
+                image: "{{ url_for('static', filename='images/pediatric.jpg') }}",
+                items: [
+                    "Diagnosis and treatment of congenital heart diseases in children",
+                    "Fetal echocardiography (for prenatal diagnosis)",
+                    "Surgical and catheter-based interventions in children"
+                ]
+            },
+            {
+                title: "Electrophysiology and Arrhythmia Management",
+                image: "{{ url_for('static', filename='images/electrop.jpg') }}",
+                items: [
+                    "Diagnosis and treatment of abnormal heart rhythms",
+                    "Ablation therapy",
+                    "Pacemaker and ICD implantation"
+                ]
+            },
+            {
+                title: "Heart Failure Clinics",
+                image: "{{ url_for('static', filename='images/heart failure.png') }}",
+                items: [
+                    "Advanced therapies for chronic heart failure",
+                    "Device therapy (CRT, LVAD)",
+                    "Transplant assessment and care"
+                ]
+            },
+            {
+                title: "Telecardiology & Remote Monitoring",
+                image: "{{ url_for('static', filename='images/telehealth.png') }}",
+                items: [
+                    "Remote ECG monitoring",
+                    "Teleconsultations for follow-up care"
+                ]
+            },
+            {
+                title: "Specialized Units",
+                image: "{{ url_for('static', filename='images/specialized.jpg') }}",
+                items: [
+                    "Cardiac Intensive Care Unit (CICU)",
+                    "Post-operative cardiac care",
+                    "Cardiac catheterization lab (Cath Lab)"
+                ]
+            },
+            
+        ];
+
+        const container = document.getElementById("card-container");
+
+        services.forEach(service => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const listItems = service.items.map(item => `<li>${item}</li>`).join("");
+            const content = service.form ? `
+                <img src="${service.image}" alt="${service.title}" />
+                <div class="card-body">
+                    <h3>${service.title}</h3>
+                    <ul>${listItems}</ul>
+                    ${service.form}
+                </div>
+            ` : `
+                <img src="${service.image}" alt="${service.title}" />
+                <div class="card-body">
+                    <h3>${service.title}</h3>
+                    <ul>${listItems}</ul>
+                </div>
+            `;
+
+            card.innerHTML = content;
+            container.appendChild(card);
+        });
+
+        // Handle diabetes prediction form submission
+        const diabetesForm = document.getElementById('diabetes-form');
+        if (diabetesForm) {
+            diabetesForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const resultDiv = document.getElementById('prediction-result');
+                resultDiv.innerHTML = '<p>Loading...</p>';
+
+                const formData = new FormData(diabetesForm);
+                try {
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    } else if (!data.success && data.errors) {
+                        const errorMessages = Object.values(data.errors).join('<br>');
+                        resultDiv.innerHTML = `<p class="text-danger">${errorMessages}</p>`;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <h4>Prediction Result</h4>
+                            <p><strong>Status:</strong> ${data.prediction}</p>
+                            <p><strong>Sugar Category:</strong> ${data.sugar_category}</p>
+                            <p><strong>BMI:</strong> ${data.bmi}</p>
+                            <p><strong>Diet Recommendation:</strong> ${data.diet_recommendation}</p>
+                            <p><strong>Food Recommendations:</strong> ${data.food_recommendations.join(', ')}</p>
+                            <p><strong>Exercise Recommendations:</strong> ${data.exercise_recommendations.join(', ')}</p>
+                        `;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `<p class="text-danger">Error: Unable to process prediction. Please try again.</p>`;
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

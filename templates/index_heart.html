@@ -1,0 +1,256 @@
+{% extends "base_heart.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Heart Rate Monitoring</h2>
+    
+    <div class="ble-section">
+        <button id="discoverBtn">Discover BLE Devices</button>
+        <div id="devicesList"></div>
+        
+        <div id="monitorControls" style="display: none;">
+            <button id="startMonitorBtn">Start Monitoring</button>
+            <button id="stopMonitorBtn" disabled>Stop Monitoring</button>
+        </div>
+        
+        <div id="heartRateDisplay">
+            <h3>Current Heart Rate: <span id="currentHeartRate">--</span> BPM</h3>
+        </div>
+    </div>
+    
+    <div class="prediction-section">
+        <h2>Heart Disease Risk Assessment</h2>
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="Age" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="sex">Sex:</label>
+                <select id="sex" name="Sex" required>
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="chestPainType">Chest Pain Type:</label>
+                <select id="chestPainType" name="ChestPainType" required>
+                    <option value="0">ATA: Atypical Angina</option>
+                    <option value="1">NAP: Non-Anginal Pain</option>
+                    <option value="2">ASY: Asymptomatic</option>
+                    <option value="3">TA: Typical Angina</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="restingBP">Resting Blood Pressure (mm Hg):</label>
+                <input type="number" id="restingBP" name="RestingBP" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cholesterol">Cholesterol (mg/dl):</label>
+                <input type="number" id="cholesterol" name="Cholesterol" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fastingBS">Fasting Blood Sugar > 120 mg/dl:</label>
+                <select id="fastingBS" name="FastingBS" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="restingECG">Resting ECG:</label>
+                <select id="restingECG" name="RestingECG" required>
+                    <option value="0">Normal</option>
+                    <option value="1">ST-T wave abnormality</option>
+                    <option value="2">Left ventricular hypertrophy</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="maxHR">Maximum Heart Rate Achieved:</label>
+                <input type="number" id="maxHR" name="MaxHR" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="exerciseAngina">Exercise Induced Angina:</label>
+                <select id="exerciseAngina" name="ExerciseAngina" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="oldpeak">ST Depression Induced by Exercise (Oldpeak):</label>
+                <input type="number" step="0.1" id="oldpeak" name="Oldpeak" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="stSlope">ST Slope:</label>
+                <select id="stSlope" name="ST_Slope" required>
+                    <option value="0">Up</option>
+                    <option value="1">Flat</option>
+                    <option value="2">Down</option>
+                </select>
+            </div>
+            
+            <button type="submit">Assess Risk</button>
+        </form>
+        
+        <div id="predictionResult" class="hidden">
+            <h3>Risk Assessment Result</h3>
+            <p>Prediction: <span id="predictionText"></span></p>
+            <p>Probability: <span id="probabilityText"></span></p>
+            <p>Risk Level: <span id="riskLevelText"></span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const discoverBtn = document.getElementById('discoverBtn');
+    const devicesList = document.getElementById('devicesList');
+    const monitorControls = document.getElementById('monitorControls');
+    const startMonitorBtn = document.getElementById('startMonitorBtn');
+    const stopMonitorBtn = document.getElementById('stopMonitorBtn');
+    const currentHeartRate = document.getElementById('currentHeartRate');
+    const predictionForm = document.getElementById('predictionForm');
+    const predictionResult = document.getElementById('predictionResult');
+    
+    let selectedDevice = null;
+    let heartRateInterval = null;
+    
+    // Discover BLE devices
+    discoverBtn.addEventListener('click', async function() {
+        devicesList.innerHTML = '<p>Discovering devices...</p>';
+        
+        try {
+            const response = await fetch('/discover_devices');
+            const data = await response.json();
+            
+            if (data.devices.length === 0) {
+                devicesList.innerHTML = '<p>No devices found.</p>';
+                return;
+            }
+            
+            let html = '<h4>Available Devices:</h4><ul>';
+            data.devices.forEach(device => {
+                html += `<li>
+                    <span>${device.name} (${device.address})</span>
+                    <button class="select-device" data-address="${device.address}">Select</button>
+                </li>`;
+            });
+            html += '</ul>';
+            devicesList.innerHTML = html;
+            
+            // Add event listeners to select buttons
+            document.querySelectorAll('.select-device').forEach(button => {
+                button.addEventListener('click', function() {
+                    selectedDevice = this.getAttribute('data-address');
+                    monitorControls.style.display = 'block';
+                    devicesList.innerHTML += `<p>Selected: ${selectedDevice}</p>`;
+                });
+            });
+        } catch (error) {
+            devicesList.innerHTML = `<p class="error">Error discovering devices: ${error.message}</p>`;
+        }
+    });
+    
+    // Start monitoring
+    startMonitorBtn.addEventListener('click', async function() {
+        if (!selectedDevice) return;
+        
+        try {
+            const response = await fetch('/start_ble', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `device_address=${encodeURIComponent(selectedDevice)}`
+            });
+            
+            const data = await response.json();
+            if (data.status === 'success') {
+                startMonitorBtn.disabled = true;
+                stopMonitorBtn.disabled = false;
+                
+                // Start polling for heart rate updates
+                heartRateInterval = setInterval(async () => {
+                    const hrResponse = await fetch('/get_heart_rate');
+                    const hrData = await hrResponse.json();
+                    if (hrData.heart_rate !== null) {
+                        currentHeartRate.textContent = hrData.heart_rate;
+                    }
+                }, 1000);
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            alert(`Error starting monitoring: ${error.message}`);
+        }
+    });
+    
+    // Stop monitoring
+    stopMonitorBtn.addEventListener('click', async function() {
+        try {
+            const response = await fetch('/stop_ble');
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                startMonitorBtn.disabled = false;
+                stopMonitorBtn.disabled = true;
+                clearInterval(heartRateInterval);
+            }
+        } catch (error) {
+            alert(`Error stopping monitoring: ${error.message}`);
+        }
+    });
+    
+    // Handle risk assessment form submission
+    predictionForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(predictionForm);
+        const data = {};
+        formData.forEach((value, key) => {
+            // Convert numeric fields to numbers
+            data[key] = isNaN(value) ? value : Number(value);
+        });
+        
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                document.getElementById('predictionText').textContent = 
+                    result.prediction === 1 ? 'Heart Disease Likely' : 'No Heart Disease Likely';
+                document.getElementById('probabilityText').textContent = 
+                    `${(result.probability * 100).toFixed(2)}%`;
+                document.getElementById('riskLevelText').textContent = result.risk_level;
+                
+                // Style based on risk level
+                const riskElement = document.getElementById('riskLevelText');
+                riskElement.className = result.risk_level.toLowerCase();
+                
+                predictionResult.classList.remove('hidden');
+            } else {
+                alert(result.error || 'Error processing prediction');
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    });
+});
+</script>
+{% endblock %}

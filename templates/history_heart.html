@@ -1,0 +1,24 @@
+{% extends "base_heart.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Heart Rate History</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>Heart Rate (BPM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hr in heart_rates %}
+            <tr>
+                <td>{{ hr.timestamp }}</td>
+                <td>{{ hr.heart_rate }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

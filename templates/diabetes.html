@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Diabetes Prediction</title>
+         <link rel="stylesheet" href="{{ url_for('static', filename='css/style_dia.css') }}">
+     </head>
+     <body>
+         <header>
+             <h1>Diabetes Risk Prediction</h1>
+             <nav>
+                 <a href="{{ url_for('home') }}">Home</a> |
+                 <a href="{{ url_for('diabetes_history') }}">View History</a>
+             </nav>
+         </header>
+         <form id="prediction-form" method="POST" action="{{ url_for('predict') }}">
+             <label for="age">Age:</label>
+             <input type="number" id="age" name="age" min="1" max="120" required><br><br>
+
+             <label for="gender">Gender:</label>
+             <select id="gender" name="gender" required>
+                 <option value="Male">Male</option>
+                 <option value="Female">Female</option>
+             </select><br><br>
+
+             <label for="glucose">Blood Sugar Level (Glucose, mg/dL):</label>
+             <input type="number" id="glucose" name="glucose" step="any" min="0" max="500" required><br><br>
+
+             <label for="weight">Weight (kg):</label>
+             <input type="number" id="weight" name="weight" step="any" min="20" max="300" required><br><br>
+
+             <label for="height">Height (meters):</label>
+             <input type="number" id="height" name="height" step="any" min="0.5" max="3.0" required><br><br>
+
+             <button type="submit">Predict</button>
+         </form>
+
+         <div id="result">
+             <h2 id="prediction"></h2>
+             <h3>Sugar Category:</h3>
+             <p id="sugar-category"></p>
+             <h3>BMI:</h3>
+             <p id="bmi"></p>
+             <h3>Recommended Diet:</h3>
+             <p id="diet-rec"></p>
+             <h3>Example Foods:</h3>
+             <ul id="food-recs"></ul>
+             <h3>Exercise Plan:</h3>
+             <ul id="exercise-recs"></ul>
+         </div>
+
+         <script>
+             document.getElementById('prediction-form').addEventListener('submit', async (e) => {
+                 e.preventDefault();
+                 const formData = new FormData(e.target);
+                 const response = await fetch('/predict', {
+                     method: 'POST',
+                     body: formData
+                 });
+                 const result = await response.json();
+
+                 if (result.error) {
+                     alert(result.error);
+                     return;
+                 }
+
+                 document.getElementById('prediction').innerText = `Prediction: ${result.prediction}`;
+                 document.getElementById('sugar-category').innerText = result.sugar_category;
+                 document.getElementById('bmi').innerText = `${result.bmi} (Normal: 18.5-24.9, Overweight: 25-29.9, Obese: ≥30)`;
+                 document.getElementById('diet-rec').innerText = result.diet_recommendation;
+
+                 const foodList = document.getElementById('food-recs');
+                 foodList.innerHTML = '';
+                 result.food_recommendations.forEach(rec => {
+                     const li = document.createElement('li');
+                     li.innerText = rec;
+                     foodList.appendChild(li);
+                 });
+
+                 const exerciseList = document.getElementById('exercise-recs');
+                 exerciseList.innerHTML = '';
+                 result.exercise_recommendations.forEach(rec => {
+                     const li = document.createElement('li');
+                     li.innerText = rec;
+                     exerciseList.appendChild(li);
+                 });
+             });
+         </script>
+     </body>
+     </html>
